@@ -1,0 +1,27 @@
+{
+    "_meta": {
+        "hash": {
+            "sha256": "2ed31585586e3aa1c582fb19652f7433cfa06a0eaf5df92298d1535acaa3ef12"
+        },
+        "requires": {},
+        "sources": [
+            {
+                "url": "https://pypi.python.org/simple",
+                "verify_ssl": true
+            }
+        ]
+    },
+    "default": {
+        "click": {
+            "version": "==6.7"
+        }
+    },
+    "develop": {
+        "py": {
+            "version": "==1.4.34"
+        },
+        "pytest": {
+            "version": "==3.2.1"
+        }
+    }
+}
