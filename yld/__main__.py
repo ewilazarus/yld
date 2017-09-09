@@ -15,13 +15,17 @@ from .tag import TagHandler
 
 
 @click.command(name='yld')
-@click.option('-M', '--major', 'target', flag_value='major')
-@click.option('-m', '--minor', 'target', flag_value='minor')
-@click.option('-p', '--patch', 'target', flag_value='patch')
-@click.option('-l', '--label', default=None, type=str)
+@click.option('-M', '--major', 'target', flag_value='major',
+              help='Bumps the latest tag\'s major field')
+@click.option('-m', '--minor', 'target', flag_value='minor',
+              help='Bumps the latest tag\'s minor field')
+@click.option('-p', '--patch', 'target', flag_value='patch',
+              help='Bumps the latest tag\'s patch field')
+@click.option('-l', '--label', default=None, type=str,
+              help='Bumps the revision number for the given label')
 def main(target, label):
     """
-    Tag triggered deployment helper
+    Semver tag triggered deployment helper
     """
     check_environment(target, label)
 
@@ -35,6 +39,9 @@ def main(target, label):
 
 
 def check_environment(target, label):
+    """
+    Performs some environment checks prior to the program's execution
+    """
     if not git.exists():
         click.secho('You must have git installed to use yld.', fg='red')
         sys.exit(1)
@@ -54,19 +61,27 @@ def check_environment(target, label):
 
 
 def print_information(handler, label):
+    """
+    Prints latest tag's information
+    """
     click.echo('=> Latest stable: {tag}'.format(
         tag=click.style(str(handler.latest_stable or 'N/A'), fg='yellow' if
                         handler.latest_stable else 'magenta')
     ))
-    latest_revision = handler.latest_revision(label)
-    click.echo('=> Latest relative revision ({label}): {tag}'.format(
-        label=click.style(label, fg='blue'),
-        tag=click.style(str(latest_revision or 'N/A'),
-                            fg='yellow' if latest_revision else 'magenta')
-    ))
+
+    if label is not None:
+        latest_revision = handler.latest_revision(label)
+        click.echo('=> Latest relative revision ({label}): {tag}'.format(
+            label=click.style(label, fg='blue'),
+            tag=click.style(str(latest_revision or 'N/A'),
+                                fg='yellow' if latest_revision else 'magenta')
+        ))
 
 
 def confirm(tag):
+    """
+    Prompts user before proceeding
+    """
     click.echo()
     if click.confirm('Do you want to create the tag {tag}?'.format(
             tag=click.style(str(tag), fg='yellow')),
